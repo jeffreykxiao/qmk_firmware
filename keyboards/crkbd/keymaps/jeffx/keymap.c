@@ -216,40 +216,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
       break;
     case ADJUST:
-      if (record->event.pressed) {
-        layer_on(_ADJUST);
-      } else {
-        layer_off(_ADJUST);
-      }
-      return false;
-      break;
   }
   return true;
 }
 
-uint8_t previousLayer = _QWERTY;
+uint8_t previous_layer = _QWERTY;
 
 uint32_t layer_state_set_user(uint32_t state) {
     uint8_t layer = biton32(state);
     switch (layer) {
         case _QWERTY:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+            if (previous_layer != _ADJUST)
+            {
+                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+            }
             rgb_matrix_sethsv_noeeprom(HSV_PURPLE);
         break;
         case _LOWER:
             rgb_matrix_sethsv_noeeprom(HSV_CYAN);
         break;
         case _RAISE:
-            rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
+            rgb_matrix_sethsv_noeeprom(HSV_SPRINGGREEN);
         break;
         case _ADJUST:
             rgb_matrix_mode_noeeprom(RGB_MATRIX_CYCLE_OUT_IN_DUAL);
         break;
         case _FUNC:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_CYCLE_LEFT_RIGHT);
-            rgb_matrix_sethsv_noeeprom(HSV_SPRINGGREEN);
+            rgb_matrix_mode_noeeprom(DISABLE_RGB_MATRIX_BAND_PINWHEEL_VAL);
         break;
     }
-    previousLayer = layer;
+    previous_layer = layer;
   return state;
 }
